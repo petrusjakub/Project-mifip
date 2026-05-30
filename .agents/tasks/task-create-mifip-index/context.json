@@ -1,0 +1,61 @@
+{
+  "project_type": "Static HTML single-page application for MiFIP insurance product",
+  "language": "HTML/CSS/JavaScript (all inline in single file)",
+  "build_system": "None - single static HTML file",
+  "test_framework": "Manual browser testing - verify HTML structure validity",
+  "build_command": "python3 -c \"import html.parser; p=html.parser.HTMLParser(); p.feed(open('/projects/sandbox/Project-mifip/index.html').read()); print('HTML parsed OK')\"",
+  "test_command": "python3 -c \"content=open('/projects/sandbox/Project-mifip/index.html').read(); assert '<!DOCTYPE html>' in content; assert 'MiFIP' in content or 'MiFuture' in content; assert '087781896087' in content; assert 'wa.me' in content; print('Basic checks passed')\"",
+  "verification_instructions": "1. Verify index.html exists and is valid HTML. 2. Verify sticky WA header with correct phone number and message. 3. Verify all tab navigation works. 4. Verify calculator logic produces correct numbers. 5. Verify responsive design.",
+  "snapshot_or_generated_files": null,
+  "setup_instructions": "No setup needed - just create index.html in /projects/sandbox/Project-mifip/",
+  "environment_constraints": "INTEGRATIONS_ONLY network - no package installs, no external dependencies. All CSS/JS must be inline. Cannot install openpyxl or other packages to read xlsx programmatically.",
+  "contribution_requirements": "Single file index.html with all CSS and JS inline. Must follow the design pattern from index (17).html.",
+  "key_patterns": "Reference file uses: sticky WA banner at top, hero header with gradient, tab navigation (scrollable), card-based content sections, calculator with embedded JSON data, FAQ accordion, floating WA button. All CSS inline in <style> tag, all JS inline in <script> tag at bottom.",
+  "relevant_files": [
+    "index (17).html - reference design/layout template (MiUHC product)",
+    "Kalkulator Profit MIFIP (IDR).xlsx - profit calculator data (3 sheets: LP, BP, SBP levels)",
+    "Kalkulator Profit MIFIP (USD).xlsx - profit calculator data in USD",
+    "Materi Training MiFIP.xlsx - comprehensive training material with product specs",
+    "MiFIP (Future Income Protector) #1.xlsx - product presentation material",
+    "A. Brosur MiFuture Income Protector (MiFIP).xlsx - brochure content with illustrations",
+    "Mifip 10rb Usd U35th.xlsx - sample proposal showing illustration table format"
+  ],
+  "directory_structure": "Single directory /projects/sandbox/Project-mifip/ containing xlsx/pdf/pptx source files and the reference index (17).html. Output will be index.html in the same directory.",
+  "product_details": {
+    "name": "MiFuture Income Protector (MiFIP)",
+    "tagline": "Perlindungan Terus Tanpa Putus",
+    "type": "Asuransi Jiwa Dwiguna (Endowment Life Insurance)",
+    "provider": "PT Asuransi Jiwa Manulife Indonesia",
+    "currencies": ["IDR", "USD"],
+    "payment_periods": ["Sekaligus (Single Premium)", "5 tahun (Reguler)"],
+    "min_dana_mapan": {"IDR": 50000000, "USD": 5000},
+    "premium_bands": {
+      "Band 1": {"IDR": "50jt - 99.9jt", "USD": "5K - 9.9K"},
+      "Band 2": {"IDR": "100jt - 199.9jt", "USD": "10K - 19.9K"},
+      "Band 3": {"IDR": "200jt - 499.9jt", "USD": "20K - 49.9K"},
+      "Band 4": {"IDR": ">= 500jt", "USD": ">= 50K"}
+    },
+    "usia_mapan_options": [25, 35, 45, 55, 60],
+    "benefits_total_800_percent": {
+      "usia_mapan": "100% Dana Mapan (lump sum at maturity)",
+      "tunai_tahunan": "20% Dana Mapan x 20 tahun = 400% Dana Mapan",
+      "akhir_pertanggungan": "200% Dana Mapan (lump sum at end)",
+      "meninggal_dunia": "100% Dana Mapan",
+      "meninggal_kecelakaan": "100% Dana Mapan (additional)",
+      "pembebasan_premi": "If insured dies during payment period, remaining premiums waived"
+    },
+    "entry_age_rules": {
+      "single_premium": {"min": "1 bulan", "max_by_usia_mapan": {"25": "24 thn", "35": "34 thn", "45": "44 thn", "55": "54 thn", "60": "59 thn"}},
+      "regular_5yr": {"min": "18 thn", "max_by_usia_mapan": {"25": "N/A (min age 18, gap must be >5)", "35": "30 thn", "45": "40 thn", "55": "50 thn", "60": "55 thn"}}
+    },
+    "underwriting": "Simplified Issuance Offer (SIO) - 3 health questions only",
+    "masa_pertanggungan": "Usia Mapan + 20 tahun (e.g., UM 55 -> pertanggungan sampai 75 tahun)",
+    "calculator_logic": {
+      "description": "The calculator shows projected benefits based on Dana Mapan input. It calculates: total premi paid over 5 years, the maturity benefit schedule, and total return.",
+      "key_formula": "At Usia Mapan: receive 100% Dana Mapan. Then 20% Dana Mapan per year for 20 years. At end: 200% Dana Mapan. Total = 800% Dana Mapan.",
+      "premi_example_idr": "Dana Mapan 8.4B IDR, Premi 498.6M/year x 5 years, Usia 30 Pria, UM 55",
+      "premi_example_usd": "Dana Mapan 280K USD, Premi 30,525 USD/year x 5 years, Usia 30 Pria, UM 55",
+      "interest_rate_approx": "6.39% (IDR LP), 2.47% (USD LP)"
+    }
+  }
+}

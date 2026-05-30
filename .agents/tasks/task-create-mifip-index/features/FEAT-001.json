@@ -1,0 +1,43 @@
+{
+  "id": "FEAT-001",
+  "type": "feat",
+  "description": "Create complete index.html for MiFIP product page with all sections including sticky WA header, hero, tabbed content (Ringkasan Produk, Manfaat, Kalkulator, Simulasi Ilustrasi, FAQ), and floating WA button. Follow the exact visual design and CSS patterns from index (17).html but with MiFIP content derived from the repository Excel files.",
+  "status": "completed",
+  "steps": [
+    "Create /projects/sandbox/Project-mifip/index.html following the exact structure and CSS from 'index (17).html'",
+    "STICKY WA HEADER: Green banner (#25D366) fixed at top with text 'Petrus Jakub Partner Bisnis Manulife' + WA SVG icon + '087781896087'. Link to https://wa.me/6287781896087?text=Pak%20Petrus%2C%20saya%20mau%20tanya%20soal%20Asuransi%20MiFiP",
+    "HERO HEADER: Gradient green background (#00a758 to #006838), title 'MiFuture Income Protector (MiFIP)', subtitle 'Perlindungan Terus Tanpa Putus | Manulife Indonesia'",
+    "TAB NAVIGATION: Sticky tabs below header - 'Ringkasan Produk', 'Manfaat', 'Kalkulator Manfaat', 'Simulasi Ilustrasi', 'FAQ'",
+    "TAB 1 - RINGKASAN PRODUK: Explain what MiFIP is in simple layperson language. Cover: program perencanaan keuangan untuk masa depan, available in IDR and USD, payment options (Sekaligus or 5 tahun), total manfaat hingga 800% Dana Mapan, entry age requirements, usia mapan options (25/35/45/55/60), SIO underwriting (3 health questions only). Use info-box and highlight-box styling.",
+    "TAB 2 - MANFAAT: Detail all 8 key benefits in card format: (1) Manfaat Usia Mapan 100% Dana Mapan, (2) Manfaat Tunai Tahunan 20% x 20 tahun = 400%, (3) Manfaat Akhir Pertanggungan 200%, (4) Manfaat Meninggal Dunia 100%, (5) Manfaat Meninggal Kecelakaan 100%, (6) Pembebasan Premi, (7) Fleksibilitas Mata Uang IDR/USD, (8) Kemudahan Underwriting SIO. Include a summary table showing total 800% Dana Mapan breakdown. Include Premium Banding table (Band 1-4 for IDR and USD).",
+    "TAB 3 - KALKULATOR MANFAAT: This is the MOST IMPORTANT tab. Build a calculator where user selects: (a) Mata Uang (IDR/USD), (b) Dana Mapan amount (dropdown or input with minimum validation: IDR min 50jt, USD min 5000), (c) Usia Masuk (18-59), (d) Usia Mapan (25/35/45/55/60 - filtered based on usia masuk rules). The calculator outputs: Manfaat Usia Mapan (100% x Dana Mapan), Manfaat Tunai Tahunan (20% x Dana Mapan per year x 20 years = total 400%), Manfaat Akhir Pertanggungan (200% x Dana Mapan), TOTAL MANFAAT (800% x Dana Mapan), Masa Pertanggungan (Usia Mapan + 20). Display results in beautiful card format with clear numbers. Also show a year-by-year benefit schedule table.",
+    "TAB 4 - SIMULASI ILUSTRASI: Show concrete example illustrations derived from the Excel data. Example 1: Pria 30th, Usia Mapan 55, Dana Mapan IDR 1.2M -> show year-by-year table. Example 2: Pria 35th, USD 10,000 -> show table. Include visual timeline/flow of benefits.",
+    "TAB 5 - FAQ: At least 10 FAQ items covering common questions: Apa itu MiFIP?, Apa itu Dana Mapan?, Berapa total manfaat?, Apa bedanya Single Premium vs 5 tahun?, Berapa minimal Dana Mapan?, Siapa yang bisa ikut (usia masuk)?, Apa yang terjadi jika meninggal?, Apa itu Pembebasan Premi?, Mata uang apa saja?, Bagaimana proses pendaftaran?",
+    "FLOATING WA BUTTON: Bottom-right floating green circle with WA icon, same link as header banner, with tooltip showing 'Petrus Jakub - 087781896087'",
+    "ALL CSS INLINE in <style> tag - copy and adapt the complete CSS from index (17).html. Color scheme: Manulife green (#00a758, #006838, #25D366)",
+    "ALL JS INLINE in <script> tag at bottom - tab navigation, FAQ accordion, calculator logic. Calculator must be fully functional with correct mathematical calculations.",
+    "RESPONSIVE DESIGN: Must work well on mobile (< 600px) and desktop. Use same media queries pattern from reference file.",
+    "LANGUAGE: All content in Bahasa Indonesia, written for laypersons (orang awam) - avoid jargon, use simple explanations, use analogies where helpful."
+  ],
+  "acceptance_criteria": [
+    "index.html exists at /projects/sandbox/Project-mifip/index.html",
+    "File is valid HTML5 with proper DOCTYPE, charset, viewport meta",
+    "Sticky WA banner shows 'Petrus Jakub Partner Bisnis Manulife' + phone number 087781896087 with correct WhatsApp link containing message 'Pak Petrus, saya mau tanya soal Asuransi MiFiP'",
+    "All 5 tabs render and switch correctly via JavaScript",
+    "Calculator correctly computes: 100% Dana Mapan (Usia Mapan), 400% Dana Mapan (Tunai Tahunan), 200% Dana Mapan (Akhir Pertanggungan), total 800% Dana Mapan",
+    "Calculator validates minimum Dana Mapan (IDR 50jt / USD 5000)",
+    "Calculator filters Usia Mapan options based on Usia Masuk",
+    "FAQ accordion opens/closes correctly",
+    "Floating WA button present with correct link",
+    "Page is responsive - readable on mobile",
+    "All CSS and JS are inline (no external dependencies)",
+    "No JavaScript errors when parsed"
+  ],
+  "verification": [
+    "Run: python3 -c \"content=open('/projects/sandbox/Project-mifip/index.html').read(); assert '<!DOCTYPE html>' in content; assert 'MiFIP' in content or 'MiFuture' in content; assert '087781896087' in content; assert 'wa.me/6287781896087' in content; assert 'Pak Petrus' in content; assert 'Kalkulator' in content; assert 'FAQ' in content; print('All content checks passed')\"",
+    "Run: python3 -c \"import html.parser; p=html.parser.HTMLParser(); p.feed(open('/projects/sandbox/Project-mifip/index.html').read()); print('HTML valid')\"",
+    "Run: python3 -c \"content=open('/projects/sandbox/Project-mifip/index.html').read(); assert 'function' in content; assert 'addEventListener' in content or 'onclick' in content; assert '<style>' in content; print('JS and CSS inline checks passed')\""
+  ],
+  "blocked_reason": null,
+  "findings": "Created 809-line index.html. All verification checks pass (HTML validity, content assertions, JS/CSS inline checks). Node.js syntax check unavailable due to proxy-bootstrap module issue in sandbox, but Python-based brace/paren matching confirms balanced JS. Calculator implements full 800% Dana Mapan logic with validation, timeline, and year-by-year table. Review fixes applied: 800% disclaimer added near calculator total, currency switch resets Dana Mapan (IDR 100M / USD 10K), Open Graph meta tags added, ARIA tab-panel coupling added."
+}
