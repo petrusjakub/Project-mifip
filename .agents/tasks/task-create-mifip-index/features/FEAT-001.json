@@ -39,5 +39,5 @@
     "Run: python3 -c \"content=open('/projects/sandbox/Project-mifip/index.html').read(); assert 'function' in content; assert 'addEventListener' in content or 'onclick' in content; assert '<style>' in content; print('JS and CSS inline checks passed')\""
   ],
   "blocked_reason": null,
-  "findings": "Created 809-line index.html. All verification checks pass (HTML validity, content assertions, JS/CSS inline checks). Node.js syntax check unavailable due to proxy-bootstrap module issue in sandbox, but Python-based brace/paren matching confirms balanced JS. Calculator implements full 800% Dana Mapan logic with validation, timeline, and year-by-year table."
+  "findings": "Created 809-line index.html. All verification checks pass (HTML validity, content assertions, JS/CSS inline checks). Node.js syntax check unavailable due to proxy-bootstrap module issue in sandbox, but Python-based brace/paren matching confirms balanced JS. Calculator implements full 800% Dana Mapan logic with validation, timeline, and year-by-year table. Review fixes applied: 800% disclaimer added near calculator total, currency switch resets Dana Mapan (IDR 100M / USD 10K), Open Graph meta tags added, ARIA tab-panel coupling added."
 }
