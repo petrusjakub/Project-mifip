@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MiFIP - MiFuture Income Protector | Manulife Indonesia</title>
+<meta property="og:title" content="MiFIP - MiFuture Income Protector | Manulife Indonesia">
+<meta property="og:description" content="Program perencanaan keuangan dengan total manfaat hingga 800% Dana Mapan. Perlindungan jiwa + penghasilan tahunan selama 20 tahun. Hubungi Petrus Jakub 087781896087.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='630' fill='%2300a758'%3E%3Crect width='1200' height='630'/%3E%3Ctext x='600' y='280' text-anchor='middle' font-family='sans-serif' font-size='72' font-weight='bold' fill='white'%3EMiFIP%3C/text%3E%3Ctext x='600' y='370' text-anchor='middle' font-family='sans-serif' font-size='36' fill='white'%3EMiFuture Income Protector%3C/text%3E%3Ctext x='600' y='430' text-anchor='middle' font-family='sans-serif' font-size='28' fill='%23e8f5e9'%3ETotal Manfaat 800%25 Dana Mapan%3C/text%3E%3C/svg%3E">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:#333;background:#f5f5f5;padding-top:48px;padding-bottom:80px}
@@ -150,15 +154,15 @@ body{padding-top:0}
 <!-- Tabs Navigation -->
 <div class="tabs-container">
 <ul class="tabs" id="mainTabs" role="tablist">
-<li class="active" data-tab="ringkasan" role="tab">Ringkasan Produk</li>
-<li data-tab="manfaat" role="tab">Manfaat</li>
-<li data-tab="kalkulator" role="tab">Kalkulator Manfaat</li>
-<li data-tab="simulasi" role="tab">Simulasi Ilustrasi</li>
-<li data-tab="faq" role="tab">FAQ</li>
+<li class="active" id="tab-btn-ringkasan" data-tab="ringkasan" role="tab" aria-controls="tab-ringkasan" aria-selected="true">Ringkasan Produk</li>
+<li id="tab-btn-manfaat" data-tab="manfaat" role="tab" aria-controls="tab-manfaat" aria-selected="false">Manfaat</li>
+<li id="tab-btn-kalkulator" data-tab="kalkulator" role="tab" aria-controls="tab-kalkulator" aria-selected="false">Kalkulator Manfaat</li>
+<li id="tab-btn-simulasi" data-tab="simulasi" role="tab" aria-controls="tab-simulasi" aria-selected="false">Simulasi Ilustrasi</li>
+<li id="tab-btn-faq" data-tab="faq" role="tab" aria-controls="tab-faq" aria-selected="false">FAQ</li>
 </ul>
 </div>
 <!-- Tab 1: Ringkasan Produk -->
-<div class="tab-content active" id="tab-ringkasan" role="tabpanel">
+<div class="tab-content active" id="tab-ringkasan" role="tabpanel" aria-labelledby="tab-btn-ringkasan">
 <div class="card">
 <h2>Apa itu MiFIP?</h2>
 <p><strong>MiFuture Income Protector (MiFIP)</strong> adalah program perencanaan keuangan dari Manulife Indonesia yang dirancang untuk memberikan perlindungan finansial jangka panjang. Bayangkan memiliki "gaji" yang terus mengalir bahkan setelah Anda pensiun - itulah yang ditawarkan MiFIP.</p>
@@ -215,7 +219,7 @@ body{padding-top:0}
 </div>
 </div>
 <!-- Tab 2: Manfaat -->
-<div class="tab-content" id="tab-manfaat" role="tabpanel">
+<div class="tab-content" id="tab-manfaat" role="tabpanel" aria-labelledby="tab-btn-manfaat">
 <div class="card">
 <h2>Manfaat MiFIP - Total Hingga 800% Dana Mapan</h2>
 <p>MiFIP memberikan rangkaian manfaat yang komprehensif. Berikut rincian lengkapnya:</p>
@@ -301,7 +305,7 @@ body{padding-top:0}
 </div>
 </div>
 <!-- Tab 3: Kalkulator Manfaat -->
-<div class="tab-content" id="tab-kalkulator" role="tabpanel">
+<div class="tab-content" id="tab-kalkulator" role="tabpanel" aria-labelledby="tab-btn-kalkulator">
 <div class="card">
 <h2>Kalkulator Manfaat MiFIP</h2>
 <p style="margin-bottom:20px">Masukkan data Anda di bawah ini untuk melihat proyeksi manfaat yang akan Anda terima dari MiFIP. Semua manfaat bersifat <strong>DIJAMIN</strong> (guaranteed).</p>
@@ -339,6 +343,7 @@ body{padding-top:0}
 <h3>Total Manfaat yang Dijamin (800%)</h3>
 <div class="total-number" id="calcTotalAmount">-</div>
 <div class="total-sub" id="calcTotalSub">-</div>
+<div style="font-size:.78rem;opacity:.85;margin-top:10px;line-height:1.5">*Total 800% berlaku jika tertanggung hidup hingga akhir masa pertanggungan. Jika Manfaat Meninggal Dunia dibayarkan, maka Manfaat Akhir Pertanggungan akan berkurang sesuai ketentuan polis.</div>
 </div>
 
 <div class="result-cards">
@@ -394,7 +399,7 @@ body{padding-top:0}
 </div>
 </div>
 <!-- Tab 4: Simulasi Ilustrasi -->
-<div class="tab-content" id="tab-simulasi" role="tabpanel">
+<div class="tab-content" id="tab-simulasi" role="tabpanel" aria-labelledby="tab-btn-simulasi">
 <div class="card">
 <h2>Simulasi Ilustrasi MiFIP</h2>
 <p>Berikut contoh nyata bagaimana MiFIP bekerja untuk Anda. Lihat bagaimana investasi hari ini berubah menjadi penghasilan jangka panjang di masa depan.</p>
@@ -505,7 +510,7 @@ body{padding-top:0}
 </div>
 </div>
 <!-- Tab 5: FAQ -->
-<div class="tab-content" id="tab-faq" role="tabpanel">
+<div class="tab-content" id="tab-faq" role="tabpanel" aria-labelledby="tab-btn-faq">
 <div class="card">
 <h2>Pertanyaan yang Sering Ditanya (FAQ)</h2>
 
@@ -583,9 +588,10 @@ var tabs = document.querySelectorAll('.tabs li');
 var contents = document.querySelectorAll('.tab-content');
 tabs.forEach(function(tab){
     tab.addEventListener('click', function(){
-        tabs.forEach(function(t){ t.classList.remove('active'); });
+        tabs.forEach(function(t){ t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
         contents.forEach(function(c){ c.classList.remove('active'); });
         tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
         document.getElementById('tab-' + tab.getAttribute('data-tab')).classList.add('active');
     });
 });
@@ -608,6 +614,7 @@ questions.forEach(function(q){
 
 // Usia Mapan options and rules
 var usiaMapanOptions = [25, 35, 45, 55, 60];
+var lastCurrency = 'IDR';
 
 // Entry age rules for Regular 5-year payment
 var regularRules = {
@@ -690,7 +697,19 @@ function formatNumber(num, currency) {
 
 function updateCalc() {
     var currency = document.getElementById('calcCurrency').value;
-    var rawVal = document.getElementById('calcDanaMapan').value.replace(/[^0-9]/g, '');
+    var danaMapanEl = document.getElementById('calcDanaMapan');
+
+    // Reset Dana Mapan default when currency changes
+    if (currency !== lastCurrency) {
+        if (currency === 'USD') {
+            danaMapanEl.value = '10000';
+        } else {
+            danaMapanEl.value = '100000000';
+        }
+        lastCurrency = currency;
+    }
+
+    var rawVal = danaMapanEl.value.replace(/[^0-9]/g, '');
     var danaMapan = parseInt(rawVal) || 0;
     var usiaMasuk = parseInt(document.getElementById('calcUsiaMasuk').value) || 30;
     var usiaMapan = parseInt(document.getElementById('calcUsiaMapan').value) || 55;
