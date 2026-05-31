@@ -366,11 +366,12 @@ body{padding-top:0}
 <div class="rc-body" id="calcAllModesBody"></div>
 </div>
 <div class="result-card">
-<div class="rc-header gold">Total Dana Mapan (7x)</div>
+<div class="rc-header gold">Total Dana Mapan (Manfaat Hidup)</div>
 <div class="rc-body">
 <div class="rc-row"><span class="rc-label">Dana Mapan (UP)</span><span class="rc-value" id="resDanaMapanValue">-</span></div>
-<div class="rc-row"><span class="rc-label">Total Dana Mapan (7x)</span><span class="rc-value big" id="resTotalDanaMapan">-</span></div>
-<div class="rc-row"><span class="rc-label">Rincian 7x</span><span class="rc-value" style="font-size:.75rem;color:#555">100% + 400% + 200%</span></div>
+<div class="rc-row"><span class="rc-label">Total Manfaat Hidup (7x)</span><span class="rc-value big" id="resTotalDanaMapan">-</span></div>
+<div class="rc-row"><span class="rc-label">Rincian</span><span class="rc-value" style="font-size:.75rem;color:#555">100% Usia Mapan + 400% Tunai + 200% Akhir</span></div>
+<div class="rc-row" style="border-top:1px dashed #e0e0e0;margin-top:4px;padding-top:8px"><span class="rc-label" style="font-size:.72rem;color:#999;line-height:1.4">*Total 800% (di bagian bawah) termasuk 100% manfaat meninggal dunia, yang bersifat OR terhadap manfaat hidup.</span></div>
 </div>
 </div>
 <div class="result-card" id="calcMinPremiCard" style="display:none">
@@ -680,7 +681,7 @@ function formatNumber(num,cur){return cur==='IDR'?formatIDR(num):formatUSD(num);
 function formatInputNumber(s,cur){var cl=s.replace(/[^0-9]/g,'');if(!cl)return'';
 if(cur==='IDR'){var r='',c=0;for(var i=cl.length-1;i>=0;i--){r=cl[i]+r;c++;if(c%3===0&&i>0)r='.'+r;}return r;}
 else{var r2='',c2=0;for(var j=cl.length-1;j>=0;j--){r2=cl[j]+r2;c2++;if(c2%3===0&&j>0)r2=','+r2;}return r2;}}
-function formatInputAndCalc(el){var cur=document.getElementById('calcCurrency').value;var raw=el.value.replace(/[^0-9]/g,'');var cp=el.selectionStart;var ol=el.value.length;el.value=formatInputNumber(raw,cur);var nl=el.value.length;var np=cp+(nl-ol);if(np<0)np=0;el.setSelectionRange(np,np);updateCalc();}
+function formatInputAndCalc(el){var cur=document.getElementById('calcCurrency').value;var oldVal=el.value;var cp=el.selectionStart;var digitsBeforeCursor=oldVal.substring(0,cp).replace(/[^0-9]/g,'').length;var raw=oldVal.replace(/[^0-9]/g,'');el.value=formatInputNumber(raw,cur);var newVal=el.value;var np=0;var dCount=0;for(var i=0;i<newVal.length;i++){if(/[0-9]/.test(newVal[i])){dCount++;if(dCount===digitsBeforeCursor){np=i+1;break;}}};if(digitsBeforeCursor===0)np=0;if(dCount<digitsBeforeCursor)np=newVal.length;el.setSelectionRange(np,np);updateCalc();}
 window.formatInputAndCalc=formatInputAndCalc;
 function switchInputMode(){var mode=document.getElementById('calcInputMode').value;var lbl=document.getElementById('calcInputLabel');var inp=document.getElementById('calcInputValue');var cur=document.getElementById('calcCurrency').value;
 if(mode==='danamapan'){lbl.textContent='Dana Mapan';inp.value=cur==='IDR'?'100.000.000':'10,000';}
@@ -720,7 +721,7 @@ var bandsList=currency==='IDR'?[{min:500000000,mx:Infinity,f:0.88},{min:20000000
 var mult=paymentMode==='tunggal'?getTunggalFactor(gender,usiaMasuk,usiaMapan):paymentMultipliers[paymentMode];
 danaMapan=0;
 for(var bi=0;bi<bandsList.length;bi++){var bd=bandsList[bi];var tryDM=Math.round(premi/(rateBase*bd.f*mult));if(tryDM>=bd.min&&tryDM<=bd.mx){danaMapan=tryDM;break;}}
-if(danaMapan===0){danaMapan=Math.round(premi/(rateBase*1.05*mult));}
+if(danaMapan===0){var fallbackDM=Math.round(premi/(rateBase*1.05*mult));if(fallbackDM>=minDM){danaMapan=fallbackDM;}else{errorEl.textContent='Premi terlalu kecil. Premi menghasilkan Dana Mapan di bawah minimum ('+minLabel+').';errorEl.classList.add('show');premiResultsEl.style.display='none';benefitResultsEl.style.display='none';return;}}
 if(danaMapan<minDM){errorEl.textContent='Premi menghasilkan Dana Mapan di bawah minimum ('+minLabel+').';errorEl.classList.add('show');premiResultsEl.style.display='none';benefitResultsEl.style.display='none';return;}
 }
 errorEl.classList.remove('show');premiResultsEl.style.display='block';benefitResultsEl.style.display='block';

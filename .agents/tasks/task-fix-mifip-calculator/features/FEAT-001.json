@@ -2,7 +2,7 @@
   "id": "FEAT-001",
   "type": "feat",
   "description": "Enhance MiFIP calculator with premium calculation, payment modes, gender selection, input mode toggle, and proper number formatting. Replace the existing simple benefits calculator with a comprehensive bidirectional calculator that supports both Dana Mapan->Premi and Premi->Dana Mapan calculations.",
-  "status": "completed",
+  "status": "in_progress",
   "steps": [
     "1. In the Kalkulator Manfaat section (tab-kalkulator) of /projects/sandbox/Project-mifip/index.html, replace the existing calculator controls with enhanced controls that include: Jenis Kelamin dropdown (Pria/Wanita), Usia Masuk dropdown (18-59), Usia Mapan dropdown (filtered based on usia masuk), Mata Uang dropdown (IDR/USD), Mode Pembayaran dropdown (Tahunan/Semesteran/Kuartalan/Bulanan/Premi Tunggal), Model Penginputan toggle (Dana Mapan (Uang Pertanggungan) / Premi), and the input field (Dana Mapan or Premi depending on mode).",
     "2. Add number formatting with dots as thousands separator for IDR values in the input field. When user types in the Dana Mapan or Premi input, format with dots (e.g., 100.000.000). Strip dots for calculation but display formatted. Use 'oninput' event to reformat as user types while preserving cursor position.",
