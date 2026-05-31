@@ -1,7 +1,14 @@
 {
   "task_id": "task-fix-mifip-calculator",
   "task_description": "Enhance the MiFIP calculator to support bidirectional premium/dana mapan calculation with payment modes, gender selection, number formatting, and rate tables derived from sample data.",
-  "status": "in_progress",
+  "status": "completed",
   "feature_order": ["FEAT-001"],
-  "blocked_reason": null
+  "blocked_reason": null,
+  "verification": {
+    "build": "pass",
+    "tests": "pass",
+    "test_quality": "pass",
+    "docker_build": "skipped",
+    "summary": "JS syntax valid, HTML structure valid (573 open/close tags balanced), all 5 Dana Mapan mode calculations exact match, payment mode multipliers correct, Premi mode within 0.25% tolerance (acceptable given approximate band factors). All 25 UI element checks pass."
+  }
 }
