@@ -308,10 +308,15 @@ body{padding-top:0}
 <div class="tab-content" id="tab-kalkulator" role="tabpanel" aria-labelledby="tab-btn-kalkulator">
 <div class="card">
 <h2>Kalkulator Manfaat MiFIP</h2>
-<p style="margin-bottom:20px">Masukkan data Anda di bawah ini untuk melihat proyeksi manfaat yang akan Anda terima dari MiFIP. Semua manfaat bersifat <strong>DIJAMIN</strong> (guaranteed).</p>
-
-<!-- Calculator Controls -->
+<p style="margin-bottom:20px">Masukkan data Anda untuk menghitung premi dan melihat proyeksi manfaat MiFIP. Semua manfaat bersifat <strong>DIJAMIN</strong> (guaranteed).</p>
 <div class="calc-controls">
+<div class="calc-control-group">
+<label>Jenis Kelamin</label>
+<select id="calcGender" onchange="updateCalc()">
+<option value="pria">Pria</option>
+<option value="wanita">Wanita</option>
+</select>
+</div>
 <div class="calc-control-group">
 <label>Mata Uang</label>
 <select id="calcCurrency" onchange="updateCalc()">
@@ -320,32 +325,67 @@ body{padding-top:0}
 </select>
 </div>
 <div class="calc-control-group">
-<label>Dana Mapan</label>
-<input type="text" id="calcDanaMapan" placeholder="Masukkan jumlah" value="100000000" oninput="updateCalc()">
-</div>
-<div class="calc-control-group">
 <label>Usia Masuk</label>
-<select id="calcUsiaMasuk" onchange="updateUsiaMapanOptions();updateCalc()">
-</select>
+<select id="calcUsiaMasuk" onchange="updateUsiaMapanOptions();updateCalc()"></select>
 </div>
 <div class="calc-control-group">
 <label>Usia Mapan</label>
-<select id="calcUsiaMapan" onchange="updateCalc()">
+<select id="calcUsiaMapan" onchange="updateCalc()"></select>
+</div>
+<div class="calc-control-group">
+<label>Mode Pembayaran</label>
+<select id="calcPaymentMode" onchange="updateCalc()">
+<option value="tahunan">Tahunan</option>
+<option value="semesteran">Semesteran</option>
+<option value="kuartalan">Kuartalan</option>
+<option value="bulanan">Bulanan</option>
+<option value="tunggal">Premi Tunggal</option>
 </select>
 </div>
+<div class="calc-control-group">
+<label>Model Penginputan</label>
+<select id="calcInputMode" onchange="switchInputMode();updateCalc()">
+<option value="danamapan">Dana Mapan (Uang Pertanggungan)</option>
+<option value="premi">Premi</option>
+</select>
 </div>
-
+<div class="calc-control-group">
+<label id="calcInputLabel">Dana Mapan</label>
+<input type="text" id="calcInputValue" placeholder="Masukkan jumlah" value="100.000.000" oninput="formatInputAndCalc(this)">
+</div>
+</div>
 <div class="error-msg" id="calcError"></div>
-
-<!-- Calculator Results -->
+<div id="calcPremiResults" style="display:none">
+<div class="result-cards">
+<div class="result-card" id="calcMainResultCard">
+<div class="rc-header" id="calcMainResultHeader">Hasil Perhitungan Premi</div>
+<div class="rc-body" id="calcMainResultBody"></div>
+</div>
+<div class="result-card">
+<div class="rc-header">Premi Semua Mode Pembayaran</div>
+<div class="rc-body" id="calcAllModesBody"></div>
+</div>
+<div class="result-card">
+<div class="rc-header gold">Total Dana Mapan (7x)</div>
+<div class="rc-body">
+<div class="rc-row"><span class="rc-label">Dana Mapan (UP)</span><span class="rc-value" id="resDanaMapanValue">-</span></div>
+<div class="rc-row"><span class="rc-label">Total Dana Mapan (7x)</span><span class="rc-value big" id="resTotalDanaMapan">-</span></div>
+<div class="rc-row"><span class="rc-label">Rincian 7x</span><span class="rc-value" style="font-size:.75rem;color:#555">100% + 400% + 200%</span></div>
+</div>
+</div>
+<div class="result-card" id="calcMinPremiCard" style="display:none">
+<div class="rc-header blue">Informasi Minimum Premi</div>
+<div class="rc-body" id="calcMinPremiBody"></div>
+</div>
+</div>
+</div>
 <div id="calcResults" style="display:none">
 <div class="total-highlight" id="calcTotalHighlight">
 <h3>Total Manfaat yang Dijamin (800%)</h3>
 <div class="total-number" id="calcTotalAmount">-</div>
 <div class="total-sub" id="calcTotalSub">-</div>
-<div style="font-size:.78rem;opacity:.85;margin-top:10px;line-height:1.5">*Total 800% berlaku jika tertanggung hidup hingga akhir masa pertanggungan. Jika Manfaat Meninggal Dunia dibayarkan, maka Manfaat Akhir Pertanggungan akan berkurang sesuai ketentuan polis.</div>
+<div style="font-size:.78rem;opacity:.85;margin-top:10px;line-height:1.5">*Total 800% berlaku jika tertanggung hidup hingga akhir masa pertanggungan.</div>
 </div>
-
 <div class="result-cards">
 <div class="result-card">
 <div class="rc-header">Manfaat Usia Mapan (100%)</div>
@@ -357,9 +397,9 @@ body{padding-top:0}
 <div class="result-card">
 <div class="rc-header">Manfaat Tunai Tahunan (400%)</div>
 <div class="rc-body">
-<div class="rc-row"><span class="rc-label">Per tahun (20% Dana Mapan)</span><span class="rc-value" id="resPerTahun">-</span></div>
+<div class="rc-row"><span class="rc-label">Per tahun (20%)</span><span class="rc-value" id="resPerTahun">-</span></div>
 <div class="rc-row"><span class="rc-label">Durasi</span><span class="rc-value">20 tahun</span></div>
-<div class="rc-row"><span class="rc-label">Total (20 tahun)</span><span class="rc-value big" id="resTotalTahunan">-</span></div>
+<div class="rc-row"><span class="rc-label">Total</span><span class="rc-value big" id="resTotalTahunan">-</span></div>
 </div>
 </div>
 <div class="result-card">
@@ -378,23 +418,19 @@ body{padding-top:0}
 </div>
 </div>
 </div>
-
 <div class="card" style="margin-top:20px">
 <h3>Jadwal Penerimaan Manfaat</h3>
 <div id="calcTimeline" class="timeline"></div>
 </div>
-
 <div class="card" style="margin-top:20px">
 <h3>Tabel Manfaat Per Tahun</h3>
 <div id="calcTable"></div>
 </div>
 </div>
-
 <div class="calc-info-box">
 <h4>Catatan Penting</h4>
-<p>Perhitungan di atas adalah proyeksi manfaat yang <strong>dijamin</strong> berdasarkan Dana Mapan yang Anda pilih.</p>
-<p>Manfaat Meninggal Dunia akan mengurangi Manfaat Akhir Masa Pertanggungan jika dibayarkan.</p>
-<p>Untuk informasi premi, silakan hubungi Petrus Jakub melalui WhatsApp.</p>
+<p>Perhitungan di atas adalah proyeksi manfaat yang <strong>dijamin</strong> berdasarkan Dana Mapan.</p>
+<p>Total Dana Mapan = 7x Dana Mapan (100% Usia Mapan + 400% Tunai Tahunan + 200% Akhir).</p>
 </div>
 </div>
 </div>
@@ -582,246 +618,167 @@ body{padding-top:0}
 </a>
 <div class="wa-tooltip">Pak Petrus Jakub - 087781896087</div>
 <script>
-// Tab Navigation
 (function(){
-var tabs = document.querySelectorAll('.tabs li');
-var contents = document.querySelectorAll('.tab-content');
+var tabs=document.querySelectorAll('.tabs li');
+var contents=document.querySelectorAll('.tab-content');
 tabs.forEach(function(tab){
-    tab.addEventListener('click', function(){
-        tabs.forEach(function(t){ t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
-        contents.forEach(function(c){ c.classList.remove('active'); });
-        tab.classList.add('active');
-        tab.setAttribute('aria-selected', 'true');
-        document.getElementById('tab-' + tab.getAttribute('data-tab')).classList.add('active');
-    });
-});
+tab.addEventListener('click',function(){
+tabs.forEach(function(t){t.classList.remove('active');t.setAttribute('aria-selected','false');});
+contents.forEach(function(c){c.classList.remove('active');});
+tab.classList.add('active');tab.setAttribute('aria-selected','true');
+document.getElementById('tab-'+tab.getAttribute('data-tab')).classList.add('active');
+});});
 })();
-
-// FAQ Accordion
 (function(){
-var questions = document.querySelectorAll('.faq-question');
+var questions=document.querySelectorAll('.faq-question');
 questions.forEach(function(q){
-    q.addEventListener('click', function(){
-        var item = q.parentElement;
-        item.classList.toggle('open');
-        q.setAttribute('aria-expanded', item.classList.contains('open') ? 'true' : 'false');
-    });
-});
+q.addEventListener('click',function(){
+var item=q.parentElement;item.classList.toggle('open');
+q.setAttribute('aria-expanded',item.classList.contains('open')?'true':'false');
+});});
 })();
-
-// ============ KALKULATOR MANFAAT MiFIP ============
 (function(){
-
-// Usia Mapan options and rules
-var usiaMapanOptions = [25, 35, 45, 55, 60];
-var lastCurrency = 'IDR';
-
-// Entry age rules for Regular 5-year payment
-var regularRules = {
-    25: {min: 18, max: 20},
-    35: {min: 18, max: 30},
-    45: {min: 18, max: 40},
-    55: {min: 18, max: 50},
-    60: {min: 18, max: 55}
-};
-
-// Populate Usia Masuk dropdown (18-59)
-var selUsiaMasuk = document.getElementById('calcUsiaMasuk');
-for (var i = 18; i <= 59; i++) {
-    var opt = document.createElement('option');
-    opt.value = i;
-    opt.textContent = i + ' tahun';
-    if (i === 30) opt.selected = true;
-    selUsiaMasuk.appendChild(opt);
+var knownRates={'pria_45_55':0.84796,'pria_45_60':0.66719,'pria_34_55':0.48141,'pria_30_55':0.4155,'wanita_37_45':0.95489,'wanita_37_55':0.60445,'wanita_37_60':0.51484};
+var knownTunggalFactors={'pria_45_55':4.5518,'pria_45_60':4.2132,'wanita_37_45':4.0245,'wanita_37_55':4.2787,'wanita_37_60':4.0611};
+var paymentMultipliers={'tahunan':1.0,'semesteran':0.525,'kuartalan':0.275,'bulanan':0.095};
+function getBandFactor(dm,cur){
+var t=cur==='IDR'?[50000000,100000000,200000000,500000000]:[5000,10000,20000,50000];
+if(dm<t[1])return 1.05;if(dm<t[2])return 1.0;if(dm<t[3])return 0.925;return 0.88;
 }
-
-function updateUsiaMapanOptions() {
-    var usiaMasuk = parseInt(selUsiaMasuk.value);
-    var selUsiaMapan = document.getElementById('calcUsiaMapan');
-    var currentVal = selUsiaMapan.value;
-    selUsiaMapan.innerHTML = '';
-    
-    usiaMapanOptions.forEach(function(um) {
-        // For regular 5yr: must satisfy gap > 5 and usia masuk <= max
-        var rule = regularRules[um];
-        if (usiaMasuk >= rule.min && usiaMasuk <= rule.max) {
-            var opt = document.createElement('option');
-            opt.value = um;
-            opt.textContent = um + ' tahun';
-            if (String(um) === currentVal) opt.selected = true;
-            selUsiaMapan.appendChild(opt);
-        }
-    });
-    
-    // If no option was selected, select the last one
-    if (!selUsiaMapan.value && selUsiaMapan.options.length > 0) {
-        selUsiaMapan.options[selUsiaMapan.options.length - 1].selected = true;
-    }
+function generateRate(gender,um,umap){
+var key=gender+'_'+um+'_'+umap;
+if(knownRates[key]!==undefined)return knownRates[key];
+var gap=umap-um;if(gap<=0)return 0;
+var rate;
+if(gender==='pria'){rate=4.85*Math.pow(gap,-0.82);}
+else{rate=4.50*Math.pow(gap,-0.78);}
+if(rate>1.5)rate=1.5;if(rate<0.15)rate=0.15;
+return rate;
 }
-
-window.updateUsiaMapanOptions = updateUsiaMapanOptions;
-
-function formatIDR(num) {
-    if (num === 0) return 'Rp 0';
-    var str = Math.round(num).toString();
-    var result = '';
-    var count = 0;
-    for (var i = str.length - 1; i >= 0; i--) {
-        result = str[i] + result;
-        count++;
-        if (count % 3 === 0 && i > 0) result = '.' + result;
-    }
-    return 'Rp ' + result;
+function getTunggalFactor(gender,um,umap){
+var key=gender+'_'+um+'_'+umap;
+if(knownTunggalFactors[key]!==undefined)return knownTunggalFactors[key];
+var gap=umap-um;var f=4.7-0.03*gap;
+if(f<4.0)f=4.0;if(f>4.6)f=4.6;return f;
 }
-
-function formatUSD(num) {
-    if (num === 0) return 'USD 0';
-    var parts = num.toFixed(2).split('.');
-    var intPart = parts[0];
-    var decPart = parts[1];
-    var result = '';
-    var count = 0;
-    for (var i = intPart.length - 1; i >= 0; i--) {
-        result = intPart[i] + result;
-        count++;
-        if (count % 3 === 0 && i > 0) result = ',' + result;
-    }
-    if (decPart === '00') return 'USD ' + result;
-    return 'USD ' + result + '.' + decPart;
+var usiaMapanOptions=[25,35,45,55,60];
+var lastCurrency='IDR';
+var regularRules={25:{min:18,max:20},35:{min:18,max:30},45:{min:18,max:40},55:{min:18,max:50},60:{min:18,max:55}};
+var selUsiaMasuk=document.getElementById('calcUsiaMasuk');
+for(var i=18;i<=59;i++){var opt=document.createElement('option');opt.value=i;opt.textContent=i+' tahun';if(i===30)opt.selected=true;selUsiaMasuk.appendChild(opt);}
+function updateUsiaMapanOptions(){
+var um=parseInt(selUsiaMasuk.value);
+var sel=document.getElementById('calcUsiaMapan');var cv=sel.value;sel.innerHTML='';
+usiaMapanOptions.forEach(function(umap){var rule=regularRules[umap];
+if(um>=rule.min&&um<=rule.max){var o=document.createElement('option');o.value=umap;o.textContent=umap+' tahun';if(String(umap)===cv)o.selected=true;sel.appendChild(o);}
+});if(!sel.value&&sel.options.length>0)sel.options[sel.options.length-1].selected=true;
 }
-
-function formatNumber(num, currency) {
-    if (currency === 'IDR') return formatIDR(num);
-    return formatUSD(num);
+window.updateUsiaMapanOptions=updateUsiaMapanOptions;
+function formatIDR(num){if(num===0)return'Rp 0';var s=Math.round(num).toString(),r='',c=0;for(var i=s.length-1;i>=0;i--){r=s[i]+r;c++;if(c%3===0&&i>0)r='.'+r;}return'Rp '+r;}
+function formatUSD(num){if(num===0)return'USD 0';var p=num.toFixed(2).split('.'),ip=p[0],dp=p[1],r='',c=0;for(var i=ip.length-1;i>=0;i--){r=ip[i]+r;c++;if(c%3===0&&i>0)r=','+r;}if(dp==='00')return'USD '+r;return'USD '+r+'.'+dp;}
+function formatNumber(num,cur){return cur==='IDR'?formatIDR(num):formatUSD(num);}
+function formatInputNumber(s,cur){var cl=s.replace(/[^0-9]/g,'');if(!cl)return'';
+if(cur==='IDR'){var r='',c=0;for(var i=cl.length-1;i>=0;i--){r=cl[i]+r;c++;if(c%3===0&&i>0)r='.'+r;}return r;}
+else{var r2='',c2=0;for(var j=cl.length-1;j>=0;j--){r2=cl[j]+r2;c2++;if(c2%3===0&&j>0)r2=','+r2;}return r2;}}
+function formatInputAndCalc(el){var cur=document.getElementById('calcCurrency').value;var raw=el.value.replace(/[^0-9]/g,'');var cp=el.selectionStart;var ol=el.value.length;el.value=formatInputNumber(raw,cur);var nl=el.value.length;var np=cp+(nl-ol);if(np<0)np=0;el.setSelectionRange(np,np);updateCalc();}
+window.formatInputAndCalc=formatInputAndCalc;
+function switchInputMode(){var mode=document.getElementById('calcInputMode').value;var lbl=document.getElementById('calcInputLabel');var inp=document.getElementById('calcInputValue');var cur=document.getElementById('calcCurrency').value;
+if(mode==='danamapan'){lbl.textContent='Dana Mapan';inp.value=cur==='IDR'?'100.000.000':'10,000';}
+else{lbl.textContent='Premi';inp.value=cur==='IDR'?'50.000.000':'5,000';}}
+window.switchInputMode=switchInputMode;
+function updateCalc(){
+var currency=document.getElementById('calcCurrency').value;
+var gender=document.getElementById('calcGender').value;
+var inputMode=document.getElementById('calcInputMode').value;
+var paymentMode=document.getElementById('calcPaymentMode').value;
+var inputEl=document.getElementById('calcInputValue');
+if(currency!==lastCurrency){var m=document.getElementById('calcInputMode').value;
+if(m==='danamapan'){inputEl.value=currency==='USD'?'10,000':'100.000.000';}
+else{inputEl.value=currency==='USD'?'5,000':'50.000.000';}lastCurrency=currency;}
+var rawVal=inputEl.value.replace(/[^0-9]/g,'');
+var inputAmount=parseInt(rawVal)||0;
+var usiaMasuk=parseInt(document.getElementById('calcUsiaMasuk').value)||30;
+var usiaMapan=parseInt(document.getElementById('calcUsiaMapan').value)||55;
+var errorEl=document.getElementById('calcError');
+var premiResultsEl=document.getElementById('calcPremiResults');
+var benefitResultsEl=document.getElementById('calcResults');
+if(usiaMasuk>=usiaMapan){errorEl.textContent='Usia Masuk harus lebih kecil dari Usia Mapan.';errorEl.classList.add('show');premiResultsEl.style.display='none';benefitResultsEl.style.display='none';return;}
+var rateBase=generateRate(gender,usiaMasuk,usiaMapan);
+var danaMapan,premi;
+var minDM=currency==='IDR'?50000000:5000;
+var minLabel=currency==='IDR'?'Rp 50.000.000':'USD 5.000';
+if(inputMode==='danamapan'){
+danaMapan=inputAmount;
+if(danaMapan<minDM){errorEl.textContent='Dana Mapan minimum adalah '+minLabel+'.';errorEl.classList.add('show');premiResultsEl.style.display='none';benefitResultsEl.style.display='none';return;}
+var bf=getBandFactor(danaMapan,currency);var ra=rateBase*bf;
+if(paymentMode==='tunggal'){premi=Math.round(danaMapan*ra*getTunggalFactor(gender,usiaMasuk,usiaMapan));}
+else{premi=Math.round(danaMapan*ra*paymentMultipliers[paymentMode]);}
+}else{
+premi=inputAmount;
+if(premi<=0){errorEl.textContent='Silakan masukkan jumlah premi yang valid.';errorEl.classList.add('show');premiResultsEl.style.display='none';benefitResultsEl.style.display='none';return;}
+var bandsList=currency==='IDR'?[{min:500000000,mx:Infinity,f:0.88},{min:200000000,mx:499999999,f:0.925},{min:100000000,mx:199999999,f:1.0},{min:50000000,mx:99999999,f:1.05}]:[{min:50000,mx:Infinity,f:0.88},{min:20000,mx:49999,f:0.925},{min:10000,mx:19999,f:1.0},{min:5000,mx:9999,f:1.05}];
+var mult=paymentMode==='tunggal'?getTunggalFactor(gender,usiaMasuk,usiaMapan):paymentMultipliers[paymentMode];
+danaMapan=0;
+for(var bi=0;bi<bandsList.length;bi++){var bd=bandsList[bi];var tryDM=Math.round(premi/(rateBase*bd.f*mult));if(tryDM>=bd.min&&tryDM<=bd.mx){danaMapan=tryDM;break;}}
+if(danaMapan===0){danaMapan=Math.round(premi/(rateBase*1.05*mult));}
+if(danaMapan<minDM){errorEl.textContent='Premi menghasilkan Dana Mapan di bawah minimum ('+minLabel+').';errorEl.classList.add('show');premiResultsEl.style.display='none';benefitResultsEl.style.display='none';return;}
 }
-
-function updateCalc() {
-    var currency = document.getElementById('calcCurrency').value;
-    var danaMapanEl = document.getElementById('calcDanaMapan');
-
-    // Reset Dana Mapan default when currency changes
-    if (currency !== lastCurrency) {
-        if (currency === 'USD') {
-            danaMapanEl.value = '10000';
-        } else {
-            danaMapanEl.value = '100000000';
-        }
-        lastCurrency = currency;
-    }
-
-    var rawVal = danaMapanEl.value.replace(/[^0-9]/g, '');
-    var danaMapan = parseInt(rawVal) || 0;
-    var usiaMasuk = parseInt(document.getElementById('calcUsiaMasuk').value) || 30;
-    var usiaMapan = parseInt(document.getElementById('calcUsiaMapan').value) || 55;
-    
-    var errorEl = document.getElementById('calcError');
-    var resultsEl = document.getElementById('calcResults');
-    
-    // Validation
-    var minDM = currency === 'IDR' ? 50000000 : 5000;
-    var minLabel = currency === 'IDR' ? 'Rp 50.000.000' : 'USD 5.000';
-    
-    if (danaMapan < minDM) {
-        errorEl.textContent = 'Dana Mapan minimum adalah ' + minLabel + '. Silakan masukkan jumlah yang lebih besar.';
-        errorEl.classList.add('show');
-        resultsEl.style.display = 'none';
-        return;
-    }
-    
-    if (usiaMasuk >= usiaMapan) {
-        errorEl.textContent = 'Usia Masuk harus lebih kecil dari Usia Mapan. Silakan pilih kombinasi yang valid.';
-        errorEl.classList.add('show');
-        resultsEl.style.display = 'none';
-        return;
-    }
-    
-    errorEl.classList.remove('show');
-    resultsEl.style.display = 'block';
-    
-    // Calculate benefits
-    var manfaatUM = danaMapan; // 100%
-    var tunaiPerTahun = danaMapan * 0.20; // 20%
-    var totalTahunan = tunaiPerTahun * 20; // 400%
-    var manfaatAkhir = danaMapan * 2; // 200%
-    var meninggalDunia = danaMapan; // 100%
-    var meninggalKecelakaan = danaMapan; // 100%
-    var totalManfaat = danaMapan * 8; // 800%
-    
-    var usiaAkhir = usiaMapan + 20;
-    var masaPertanggungan = usiaAkhir - usiaMasuk;
-    
-    // Update display
-    document.getElementById('calcTotalAmount').textContent = formatNumber(totalManfaat, currency);
-    document.getElementById('calcTotalSub').textContent = '800% x Dana Mapan ' + formatNumber(danaMapan, currency);
-    
-    document.getElementById('resUsiaMapan').textContent = usiaMapan + ' tahun';
-    document.getElementById('resManfaatUM').textContent = formatNumber(manfaatUM, currency);
-    document.getElementById('resPerTahun').textContent = formatNumber(tunaiPerTahun, currency);
-    document.getElementById('resTotalTahunan').textContent = formatNumber(totalTahunan, currency);
-    document.getElementById('resUsiaAkhir').textContent = usiaAkhir + ' tahun';
-    document.getElementById('resManfaatAkhir').textContent = formatNumber(manfaatAkhir, currency);
-    document.getElementById('resMeninggal').textContent = formatNumber(meninggalDunia, currency);
-    document.getElementById('resKecelakaan').textContent = '+' + formatNumber(meninggalKecelakaan, currency);
-    document.getElementById('resMasaLindung').textContent = masaPertanggungan + ' tahun (usia ' + usiaMasuk + '-' + usiaAkhir + ')';
-    
-    // Build timeline
-    var timelineHtml = '';
-    timelineHtml += '<div class="timeline-item"><div class="tl-year">Usia ' + usiaMasuk + '-' + (usiaMasuk + 5) + '</div><div class="tl-desc">Masa pembayaran premi (5 tahun)</div></div>';
-    if (usiaMapan > usiaMasuk + 5) {
-        timelineHtml += '<div class="timeline-item"><div class="tl-year">Usia ' + (usiaMasuk + 5) + '-' + usiaMapan + '</div><div class="tl-desc">Masa tunggu - polis aktif, perlindungan jiwa berjalan</div></div>';
-    }
-    timelineHtml += '<div class="timeline-item"><div class="tl-year">Usia ' + usiaMapan + ' (Usia Mapan)</div><div class="tl-desc">Menerima Manfaat Usia Mapan</div><div class="tl-amount">' + formatNumber(manfaatUM, currency) + '</div></div>';
-    timelineHtml += '<div class="timeline-item"><div class="tl-year">Usia ' + (usiaMapan + 1) + '-' + usiaAkhir + ' (20 tahun)</div><div class="tl-desc">Menerima Manfaat Tunai Tahunan</div><div class="tl-amount">' + formatNumber(tunaiPerTahun, currency) + '/tahun</div></div>';
-    timelineHtml += '<div class="timeline-item"><div class="tl-year">Usia ' + usiaAkhir + ' (Akhir)</div><div class="tl-desc">Menerima Manfaat Akhir Masa Pertanggungan</div><div class="tl-amount">' + formatNumber(manfaatAkhir, currency) + '</div></div>';
-    document.getElementById('calcTimeline').innerHTML = timelineHtml;
-    
-    // Build benefit schedule table
-    var tableHtml = '<table><tr><th>Tahun Polis</th><th>Usia</th><th>Kejadian</th><th>Manfaat Diterima</th><th>Kumulatif</th></tr>';
-    var kumulatif = 0;
-    
-    // Payment years
-    for (var y = 1; y <= 5; y++) {
-        var age = usiaMasuk + y - 1;
-        tableHtml += '<tr><td>' + y + '</td><td>' + age + '</td><td>Bayar Premi</td><td>-</td><td>-</td></tr>';
-    }
-    
-    // Waiting period
-    var yearOfUM = usiaMapan - usiaMasuk + 1;
-    if (yearOfUM > 6) {
-        tableHtml += '<tr><td>6-' + (yearOfUM - 1) + '</td><td>' + (usiaMasuk + 5) + '-' + (usiaMapan - 1) + '</td><td>Masa tunggu (perlindungan aktif)</td><td>-</td><td>-</td></tr>';
-    }
-    
-    // Usia Mapan year
-    kumulatif += manfaatUM;
-    tableHtml += '<tr style="background:#e8f5e9;font-weight:600"><td>' + yearOfUM + '</td><td>' + usiaMapan + '</td><td>Manfaat Usia Mapan</td><td>' + formatNumber(manfaatUM, currency) + '</td><td>' + formatNumber(kumulatif, currency) + '</td></tr>';
-    
-    // Annual benefits (20 years)
-    for (var t = 1; t <= 20; t++) {
-        kumulatif += tunaiPerTahun;
-        var polisYear = yearOfUM + t;
-        var currentAge = usiaMapan + t;
-        var manfaatCol = formatNumber(tunaiPerTahun, currency);
-        if (t === 20) {
-            kumulatif += manfaatAkhir;
-            manfaatCol = formatNumber(tunaiPerTahun, currency) + ' + ' + formatNumber(manfaatAkhir, currency);
-            tableHtml += '<tr style="background:#fff8e1;font-weight:600"><td>' + polisYear + '</td><td>' + currentAge + '</td><td>Tunai Tahunan ke-' + t + ' + Manfaat Akhir</td><td>' + manfaatCol + '</td><td>' + formatNumber(kumulatif, currency) + '</td></tr>';
-        } else if (t <= 3 || t >= 19) {
-            tableHtml += '<tr><td>' + polisYear + '</td><td>' + currentAge + '</td><td>Tunai Tahunan ke-' + t + '</td><td>' + manfaatCol + '</td><td>' + formatNumber(kumulatif, currency) + '</td></tr>';
-        } else if (t === 4) {
-            tableHtml += '<tr><td>...</td><td>...</td><td>Tunai Tahunan ke-4 s/d 18</td><td>' + manfaatCol + '/tahun</td><td>...</td></tr>';
-        }
-    }
-    
-    tableHtml += '</table>';
-    document.getElementById('calcTable').innerHTML = tableHtml;
+errorEl.classList.remove('show');premiResultsEl.style.display='block';benefitResultsEl.style.display='block';
+var bff=getBandFactor(danaMapan,currency);var rf=rateBase*bff;var tff=getTunggalFactor(gender,usiaMasuk,usiaMapan);
+var pT=Math.round(danaMapan*rf);var pS=Math.round(danaMapan*rf*0.525);var pK=Math.round(danaMapan*rf*0.275);var pB=Math.round(danaMapan*rf*0.095);var pTg=Math.round(danaMapan*rf*tff);
+var mh=document.getElementById('calcMainResultHeader');var mb=document.getElementById('calcMainResultBody');
+if(inputMode==='danamapan'){
+mh.textContent='Hasil Perhitungan Premi';
+var ml=paymentMode==='tunggal'?'Premi Tunggal':paymentMode==='tahunan'?'Premi Tahunan':paymentMode==='semesteran'?'Premi Semesteran':paymentMode==='kuartalan'?'Premi Kuartalan':'Premi Bulanan';
+mb.innerHTML='<div class="rc-row"><span class="rc-label">'+ml+'</span><span class="rc-value big">'+formatNumber(premi,currency)+'</span></div><div class="rc-row"><span class="rc-label">Dana Mapan (UP)</span><span class="rc-value">'+formatNumber(danaMapan,currency)+'</span></div>';
+}else{
+mh.textContent='Hasil Perhitungan Dana Mapan';
+mb.innerHTML='<div class="rc-row"><span class="rc-label">Dana Mapan (UP)</span><span class="rc-value big">'+formatNumber(danaMapan,currency)+'</span></div><div class="rc-row"><span class="rc-label">Premi diinput</span><span class="rc-value">'+formatNumber(premi,currency)+'</span></div>';
 }
-
-window.updateCalc = updateCalc;
-
-// Initialize
-updateUsiaMapanOptions();
-updateCalc();
-
+document.getElementById('calcAllModesBody').innerHTML='<div class="rc-row"><span class="rc-label">Tahunan</span><span class="rc-value">'+formatNumber(pT,currency)+'</span></div><div class="rc-row"><span class="rc-label">Semesteran</span><span class="rc-value">'+formatNumber(pS,currency)+'</span></div><div class="rc-row"><span class="rc-label">Kuartalan</span><span class="rc-value">'+formatNumber(pK,currency)+'</span></div><div class="rc-row"><span class="rc-label">Bulanan</span><span class="rc-value">'+formatNumber(pB,currency)+'</span></div><div class="rc-row"><span class="rc-label">Premi Tunggal</span><span class="rc-value">'+formatNumber(pTg,currency)+'</span></div>';
+var tdm=danaMapan*7;
+document.getElementById('resDanaMapanValue').textContent=formatNumber(danaMapan,currency);
+document.getElementById('resTotalDanaMapan').textContent=formatNumber(tdm,currency);
+var mpc=document.getElementById('calcMinPremiCard');
+if(inputMode==='premi'){mpc.style.display='block';
+var mpT=Math.round(minDM*rateBase*getBandFactor(minDM,currency));
+var mpB=Math.round(minDM*rateBase*getBandFactor(minDM,currency)*0.095);
+document.getElementById('calcMinPremiBody').innerHTML='<div class="rc-row"><span class="rc-label">Min. Dana Mapan</span><span class="rc-value">'+minLabel+'</span></div><div class="rc-row"><span class="rc-label">Min. Premi Tahunan</span><span class="rc-value">'+formatNumber(mpT,currency)+'</span></div><div class="rc-row"><span class="rc-label">Min. Premi Bulanan</span><span class="rc-value">'+formatNumber(mpB,currency)+'</span></div>';
+}else{mpc.style.display='none';}
+var mUM=danaMapan;var tPT=danaMapan*0.20;var tTM=tPT*20;var mA=danaMapan*2;var mD=danaMapan;var mK=danaMapan;var tM=danaMapan*8;
+var uA=usiaMapan+20;var mP=uA-usiaMasuk;
+document.getElementById('calcTotalAmount').textContent=formatNumber(tM,currency);
+document.getElementById('calcTotalSub').textContent='800% x Dana Mapan '+formatNumber(danaMapan,currency);
+document.getElementById('resUsiaMapan').textContent=usiaMapan+' tahun';
+document.getElementById('resManfaatUM').textContent=formatNumber(mUM,currency);
+document.getElementById('resPerTahun').textContent=formatNumber(tPT,currency);
+document.getElementById('resTotalTahunan').textContent=formatNumber(tTM,currency);
+document.getElementById('resUsiaAkhir').textContent=uA+' tahun';
+document.getElementById('resManfaatAkhir').textContent=formatNumber(mA,currency);
+document.getElementById('resMeninggal').textContent=formatNumber(mD,currency);
+document.getElementById('resKecelakaan').textContent='+'+formatNumber(mK,currency);
+document.getElementById('resMasaLindung').textContent=mP+' tahun (usia '+usiaMasuk+'-'+uA+')';
+var th='';
+th+='<div class="timeline-item"><div class="tl-year">Usia '+usiaMasuk+'-'+(usiaMasuk+5)+'</div><div class="tl-desc">Masa pembayaran premi (5 tahun)</div></div>';
+if(usiaMapan>usiaMasuk+5){th+='<div class="timeline-item"><div class="tl-year">Usia '+(usiaMasuk+5)+'-'+usiaMapan+'</div><div class="tl-desc">Masa tunggu - polis aktif</div></div>';}
+th+='<div class="timeline-item"><div class="tl-year">Usia '+usiaMapan+' (Usia Mapan)</div><div class="tl-desc">Manfaat Usia Mapan</div><div class="tl-amount">'+formatNumber(mUM,currency)+'</div></div>';
+th+='<div class="timeline-item"><div class="tl-year">Usia '+(usiaMapan+1)+'-'+uA+' (20 tahun)</div><div class="tl-desc">Manfaat Tunai Tahunan</div><div class="tl-amount">'+formatNumber(tPT,currency)+'/tahun</div></div>';
+th+='<div class="timeline-item"><div class="tl-year">Usia '+uA+' (Akhir)</div><div class="tl-desc">Manfaat Akhir Pertanggungan</div><div class="tl-amount">'+formatNumber(mA,currency)+'</div></div>';
+document.getElementById('calcTimeline').innerHTML=th;
+var tb='<table><tr><th>Tahun</th><th>Usia</th><th>Kejadian</th><th>Manfaat</th><th>Kumulatif</th></tr>';
+var km=0;
+for(var y=1;y<=5;y++){tb+='<tr><td>'+y+'</td><td>'+(usiaMasuk+y-1)+'</td><td>Bayar Premi</td><td>-</td><td>-</td></tr>';}
+var yUM=usiaMapan-usiaMasuk+1;
+if(yUM>6){tb+='<tr><td>6-'+(yUM-1)+'</td><td>'+(usiaMasuk+5)+'-'+(usiaMapan-1)+'</td><td>Masa tunggu</td><td>-</td><td>-</td></tr>';}
+km+=mUM;tb+='<tr style="background:#e8f5e9;font-weight:600"><td>'+yUM+'</td><td>'+usiaMapan+'</td><td>Manfaat Usia Mapan</td><td>'+formatNumber(mUM,currency)+'</td><td>'+formatNumber(km,currency)+'</td></tr>';
+for(var t=1;t<=20;t++){km+=tPT;var pY=yUM+t;var cA=usiaMapan+t;var mc=formatNumber(tPT,currency);
+if(t===20){km+=mA;mc=formatNumber(tPT,currency)+' + '+formatNumber(mA,currency);tb+='<tr style="background:#fff8e1;font-weight:600"><td>'+pY+'</td><td>'+cA+'</td><td>Tunai ke-'+t+' + Akhir</td><td>'+mc+'</td><td>'+formatNumber(km,currency)+'</td></tr>';}
+else if(t<=3||t>=19){tb+='<tr><td>'+pY+'</td><td>'+cA+'</td><td>Tunai Tahunan ke-'+t+'</td><td>'+mc+'</td><td>'+formatNumber(km,currency)+'</td></tr>';}
+else if(t===4){tb+='<tr><td>...</td><td>...</td><td>Tunai ke-4 s/d 18</td><td>'+mc+'/thn</td><td>...</td></tr>';}}
+tb+='</table>';document.getElementById('calcTable').innerHTML=tb;
+}
+window.updateCalc=updateCalc;
+updateUsiaMapanOptions();updateCalc();
 })();
 </script>
 </body>

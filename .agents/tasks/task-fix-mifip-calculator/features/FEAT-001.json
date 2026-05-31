@@ -1,0 +1,38 @@
+{
+  "id": "FEAT-001",
+  "type": "feat",
+  "description": "Enhance MiFIP calculator with premium calculation, payment modes, gender selection, input mode toggle, and proper number formatting. Replace the existing simple benefits calculator with a comprehensive bidirectional calculator that supports both Dana Mapan->Premi and Premi->Dana Mapan calculations.",
+  "status": "in_progress",
+  "steps": [
+    "1. In the Kalkulator Manfaat section (tab-kalkulator) of /projects/sandbox/Project-mifip/index.html, replace the existing calculator controls with enhanced controls that include: Jenis Kelamin dropdown (Pria/Wanita), Usia Masuk dropdown (18-59), Usia Mapan dropdown (filtered based on usia masuk), Mata Uang dropdown (IDR/USD), Mode Pembayaran dropdown (Tahunan/Semesteran/Kuartalan/Bulanan/Premi Tunggal), Model Penginputan toggle (Dana Mapan (Uang Pertanggungan) / Premi), and the input field (Dana Mapan or Premi depending on mode).",
+    "2. Add number formatting with dots as thousands separator for IDR values in the input field. When user types in the Dana Mapan or Premi input, format with dots (e.g., 100.000.000). Strip dots for calculation but display formatted. Use 'oninput' event to reformat as user types while preserving cursor position.",
+    "3. Embed comprehensive premium rate tables in JavaScript. Build a rate lookup object keyed by gender, usia masuk, and usia mapan. The known EXACT rates (per 100jt Dana Mapan, Tahunan, Band 2) are: Pria 45 UM55=0.84796, Pria 45 UM60=0.66719, Pria 34 UM55=0.48141, Pria 30 UM55=0.4155, Wanita 37 UM45=0.95489, Wanita 37 UM55=0.60445, Wanita 37 UM60=0.51484. For other age combinations, generate interpolated rates using an actuarial model: rate = masaPembayaranPremi(5) / (usiaMapan - usiaMasuk) * adjustmentFactor based on gender and gap years. The rates should follow the pattern that shorter gap (usia masuk closer to usia mapan) = higher rate. Use a mathematical model that fits the known data points.",
+    "4. Implement payment mode multipliers in the calculation: Semesteran=0.525x, Kuartalan=0.275x, Bulanan=0.095x (all exact from sample data). For Premi Tunggal, use separate factors that vary by scenario - embed known factors: Pria45_UM55=4.5518, Pria45_UM60=4.2132, Wanita37_UM45=4.0245, Wanita37_UM55=4.2787, Wanita37_UM60=4.0611. For unknown combinations, interpolate the Premi Tunggal factor (approximately 4.0-4.6 range based on years to usia mapan).",
+    "5. Implement Dana Mapan input mode: When user selects 'Dana Mapan (Uang Pertanggungan)' mode and inputs a Dana Mapan value, calculate and display: (a) Premi for the selected payment mode, (b) Premi for ALL other payment modes as reference, (c) Total Dana Mapan = 7 x Dana Mapan. Show these in result cards below the input.",
+    "6. Implement Premi input mode: When user selects 'Premi' mode and inputs a Premi amount, calculate and display: (a) Dana Mapan (UP) = Premi / rate_tahunan (if mode is tahunan) or adjusted for other modes, (b) Total Dana Mapan = 7 x calculated Dana Mapan, (c) Show minimum premi information based on minimum Dana Mapan (50jt IDR / 5000 USD) and the rate for selected parameters.",
+    "7. Add a premium results display section that shows: the calculated premi (in Dana Mapan mode) or calculated Dana Mapan (in Premi mode), all payment mode equivalents, Total Dana Mapan, and minimum premi info. Style using existing .result-card, .total-highlight CSS patterns.",
+    "8. Keep the existing benefit calculation (800% breakdown, timeline, benefit table) below the premium results. It should now use the Dana Mapan value (either from direct input or calculated from Premi) to show the benefit projections.",
+    "9. Ensure the calculator validates inputs properly: show error messages for invalid combinations (usia masuk >= usia mapan, Dana Mapan below minimum, Premi below minimum), and update results in real-time as user changes any input."
+  ],
+  "acceptance_criteria": [
+    "Number input displays dots as thousands separators (e.g., 100.000.000 for IDR)",
+    "Mode Pembayaran dropdown with 5 options (Tahunan, Semesteran, Kuartalan, Bulanan, Premi Tunggal) is present and functional",
+    "Model Penginputan toggle between 'Dana Mapan (Uang Pertanggungan)' and 'Premi' modes works correctly",
+    "Jenis Kelamin (Pria/Wanita) dropdown is present and affects calculations",
+    "In Dana Mapan mode: Pria 45, IDR, UM55, Tahunan, DM 100jt shows Premi ~84,796,000 and Total Dana Mapan 700,000,000",
+    "In Dana Mapan mode: Wanita 37, IDR, UM60, Tahunan, DM 100jt shows Premi ~51,484,000 and Total Dana Mapan 700,000,000",
+    "In Premi mode: shows minimum premi information",
+    "In Premi mode: Pria 45, IDR, UM55, Tahunan, Premi 50jt shows Dana Mapan ~56,296,800 and Total Dana Mapan ~394,077,600",
+    "Payment mode multipliers apply correctly: Semesteran=0.525x, Kuartalan=0.275x, Bulanan=0.095x of annual",
+    "All premi results for other modes are shown as reference when in Dana Mapan input mode",
+    "Existing 800% benefit breakdown (timeline, table) still functions correctly",
+    "Calculator works entirely client-side with no external dependencies"
+  ],
+  "verification": [
+    "Open /projects/sandbox/Project-mifip/index.html and verify it is valid HTML (no syntax errors)",
+    "Verify the JavaScript has no syntax errors by running: node -e \"const fs=require('fs'); const html=fs.readFileSync('/projects/sandbox/Project-mifip/index.html','utf8'); const match=html.match(/<script>([\\s\\S]*?)<\\/script>/); if(match){try{new Function(match[1]);console.log('JS OK')}catch(e){console.error(e);process.exit(1)}}\"",
+    "Run a Node.js script that simulates the calculator logic and validates against sample data points"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

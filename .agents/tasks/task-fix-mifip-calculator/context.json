@@ -1,0 +1,89 @@
+{
+  "project_type": "Single-file HTML page with inline CSS and JavaScript",
+  "language": "HTML/CSS/JavaScript",
+  "build_system": "None - static HTML file",
+  "test_framework": "None - manual validation against sample data",
+  "build_command": "N/A (static file)",
+  "test_command": "N/A (validate calculator output against known sample data)",
+  "verification_instructions": "Open index.html in browser and verify calculations match sample data",
+  "snapshot_or_generated_files": null,
+  "setup_instructions": "No setup required - single HTML file",
+  "environment_constraints": "INTEGRATIONS_ONLY network - cannot install packages. Cannot extract full rate tables from Excel files (only individual proposals available). Must use sample data to derive rates and interpolate.",
+  "contribution_requirements": "All changes go in index.html. Calculator must work entirely client-side with embedded data.",
+  "key_patterns": "Single-file HTML app with inline styles and scripts. Uses IIFE pattern for calculator JS. CSS uses .calc-controls, .result-card, .calc-control-group patterns. Tab-based navigation. Green theme (#00a758).",
+  "relevant_files": [
+    "/projects/sandbox/Project-mifip/index.html"
+  ],
+  "directory_structure": "Single HTML file (index.html) plus source Excel/PDF files for reference data. Project root contains proposal files and training materials.",
+  "rate_data": {
+    "description": "Premium rates derived from user-provided sample data. All rates are for Band 2 (IDR 100jt Dana Mapan). Rates represent annual premium per unit Dana Mapan.",
+    "known_rates_idr_band2_tahunan": {
+      "pria_45_um55": 0.84796,
+      "pria_45_um60": 0.66719,
+      "wanita_37_um45": 0.95489,
+      "wanita_37_um55": 0.60445,
+      "wanita_37_um60": 0.51484,
+      "pria_34_um55": 0.48141,
+      "pria_30_um55": 0.4155
+    },
+    "payment_mode_multipliers": {
+      "tahunan": 1.0,
+      "semesteran": 0.525,
+      "kuartalan": 0.275,
+      "bulanan": 0.095
+    },
+    "premi_tunggal_factors": {
+      "pria_45_um55": 4.5518,
+      "pria_45_um60": 4.2132,
+      "wanita_37_um45": 4.0245,
+      "wanita_37_um55": 4.2787,
+      "wanita_37_um60": 4.0611
+    },
+    "total_dana_mapan_multiplier": 7,
+    "band_factors_relative_to_band2": {
+      "band1": "approximately 1.05 (varies 1.047-1.076)",
+      "band2": 1.0,
+      "band3": "approximately 0.924",
+      "band4": "approximately 0.88 (estimated)"
+    },
+    "validation_scenarios": [
+      {
+        "description": "Pria 45, IDR, UM55, Tahunan, DM 100jt",
+        "expected_premi": 84796000,
+        "expected_total_dm": 700000000
+      },
+      {
+        "description": "Pria 45, IDR, UM60, Tahunan, DM 100jt",
+        "expected_premi": 66719000,
+        "expected_total_dm": 700000000
+      },
+      {
+        "description": "Wanita 37, IDR, UM45, Tahunan, DM 100jt",
+        "expected_premi": 95489000,
+        "expected_total_dm": 700000000
+      },
+      {
+        "description": "Wanita 37, IDR, UM55, Tahunan, DM 100jt",
+        "expected_premi": 60445000,
+        "expected_total_dm": 700000000
+      },
+      {
+        "description": "Wanita 37, IDR, UM60, Tahunan, DM 100jt",
+        "expected_premi": 51484000,
+        "expected_total_dm": 700000000
+      },
+      {
+        "description": "Pria 45, IDR, UM55, Tahunan, Premi 50jt -> DM 56,296,800",
+        "input_mode": "premi",
+        "expected_dm": 56296800,
+        "expected_total_dm": 394077600
+      },
+      {
+        "description": "Wanita 37, IDR, UM60, Tahunan, Premi 100jt -> DM 210,282,800",
+        "input_mode": "premi",
+        "expected_dm": 210282800,
+        "expected_total_dm": 1471979600
+      }
+    ]
+  }
+}
